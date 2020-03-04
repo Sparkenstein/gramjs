@@ -19,7 +19,6 @@ describe('IGE decrypt function', () => {
         const key = Buffer.from('the key needs 32 characters long')
         const plainText = Buffer.from('this should hold a 64 characters long string. only 10 more left.')
         expect(AES.decryptIge(encrypted, key, iv)).toEqual(plainText)
-
     })
 })
 describe('CTR encrypt function', () => {

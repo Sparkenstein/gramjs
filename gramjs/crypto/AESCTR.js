@@ -17,7 +17,6 @@ class AESModeCTR {
     decrypt(data) {
         return Buffer.from(this.cipher.decrypt(data))
     }
-
 }
 
 module.exports = AESModeCTR

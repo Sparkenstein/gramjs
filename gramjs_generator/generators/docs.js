@@ -86,7 +86,7 @@ const findTitle = (htmlFile) => {
             // +7 to skip '<title>'.length
             return line.slice(
                 line.indexOf('<title>') + 7,
-                line.indexOf('</title>')
+                line.indexOf('</title>'),
             )
         }
     }
@@ -111,7 +111,7 @@ const buildMenu = (docs) => {
 
         docs.addMenu(
             name === '.' ? 'API' : titleCase(name),
-            `${path_}/index.html`
+            `${path_}/index.html`,
         )
     }
 
@@ -153,7 +153,7 @@ const generateIndex = (folder, paths, botsIndex, botsIndexPaths) => {
     docs.writeHead(
         titleCase(folder.replace(new RegExp(`\\${path.sep}`, 'g'), '/')),
         paths.css,
-        paths.defaultCss
+        paths.defaultCss,
     )
 
     docs.setMenuSeparator(paths.arrow)
@@ -162,17 +162,17 @@ const generateIndex = (folder, paths, botsIndex, botsIndexPaths) => {
         titleCase(
             path
                 .join(filename, '..')
-                .replace(new RegExp(`\\${path.sep}`, 'g'), '/')
-        )
+                .replace(new RegExp(`\\${path.sep}`, 'g'), '/'),
+        ),
     )
 
     if (botsIndex) {
         docs.writeText(
-            `These are the methods that you may be able to use as a bot. Click <a href="${INDEX}">here</a> to view them all.`
+            `These are the methods that you may be able to use as a bot. Click <a href="${INDEX}">here</a> to view them all.`,
         )
     } else {
         docs.writeText(
-            `Click <a href="${BOT_INDEX}">here</a> to view the methods that you can use as a bot.`
+            `Click <a href="${BOT_INDEX}">here</a> to view the methods that you can use as a bot.`,
         )
     }
 
@@ -197,7 +197,7 @@ const generateIndex = (folder, paths, botsIndex, botsIndexPaths) => {
 
             docs.addRow(
                 titleCase(path.parse(namespace).name),
-                `${namespace}/${botsIndex ? BOT_INDEX : INDEX}`
+                `${namespace}/${botsIndex ? BOT_INDEX : INDEX}`,
             )
         }
 
@@ -230,7 +230,7 @@ const getDescription = (arg) => {
         otherwise = true
     } else if (arg.isFlag) {
         desc.push(
-            'This argument defaults to <code>null</code> and can be omitted.'
+            'This argument defaults to <code>null</code> and can be omitted.',
         )
         otherwise = true
     }
@@ -245,7 +245,7 @@ const getDescription = (arg) => {
         ].includes(arg.type)
     ) {
         desc.push(
-            'Anything entity-like will work if the library can find its <code>Input</code> version (e.g., usernames, <code>Peer</code>, <code>User</code> or <code>Channel</code> objects, etc.).'
+            'Anything entity-like will work if the library can find its <code>Input</code> version (e.g., usernames, <code>Peer</code>, <code>User</code> or <code>Channel</code> objects, etc.).',
         )
     }
 
@@ -272,7 +272,7 @@ const getDescription = (arg) => {
         .join(' ')
         .replace(
             /list/g,
-            '<span class="tooltip" title="Any iterable that supports .length will work too">list</span>'
+            '<span class="tooltip" title="Any iterable that supports .length will work too">list</span>',
         )
 }
 
@@ -284,7 +284,7 @@ const copyReplace = (src, dst, replacements) => {
 
     fs.writeFileSync(
         dst,
-        format(infile, replacements)
+        format(infile, replacements),
         // infile.replace(
         //     new RegExp(
         //         Object.keys(replacements)
@@ -366,7 +366,7 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
             }
 
             docs.writeText(
-                `${start} use this method. <a href="#examples">See code examples.</a>`
+                `${start} use this method. <a href="#examples">See code examples.</a>`,
             )
         }
 
@@ -374,7 +374,7 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
         docs.writeCode(tlobject)
         docs.writeCopyButton(
             'Copy import to clipboard',
-            getImportCode(tlobject)
+            getImportCode(tlobject),
         )
 
         // Write the return type (or constructors belonging to the same type)
@@ -391,7 +391,7 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
                 .map((arg) => arg.name)
 
             docs.writeText(
-                `This function returns the result of whatever the result from invoking the request passed through <i>${genericArg}</i> is.`
+                `This function returns the result of whatever the result from invoking the request passed through <i>${genericArg}</i> is.`,
             )
         } else {
             let inner = tlobject.result
@@ -450,7 +450,7 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
                         friendlyType,
                         getPathForType(arg.type),
                         null,
-                        'center'
+                        'center',
                     )
                 }
 
@@ -474,13 +474,13 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
 
             if (!errors || !errors.length) {
                 docs.writeText(
-                    'This request can\'t cause any RPC error as far as we know.'
+                    'This request can\'t cause any RPC error as far as we know.',
                 )
             } else {
                 docs.writeText(
                     `This request can cause ${errors.length} known error${
                         errors.length === 1 ? '' : 's'
-                    }:`
+                    }:`,
                 )
 
                 docs.beginTable(2)
@@ -492,7 +492,7 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
 
                 docs.endTable()
                 docs.writeText(
-                    'You can import these from <code>gramjs/errors</code>.'
+                    'You can import these from <code>gramjs/errors</code>.',
                 )
             }
 
@@ -500,10 +500,10 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
             if (tlobject.friendly) {
                 const [ns, friendly] = tlobject.friendly
                 docs.writeText(
-                    `Please refer to the documentation of <a href="https://docs.telethon.dev/en/latest/modules/client.html#telethon.client.${ns}.${friendly}"><code>client.${friendly}()</code></a> to learn about the parameters and see several code examples on how to use it.`
+                    `Please refer to the documentation of <a href="https://docs.telethon.dev/en/latest/modules/client.html#telethon.client.${ns}.${friendly}"><code>client.${friendly}()</code></a> to learn about the parameters and see several code examples on how to use it.`,
                 )
                 docs.writeText(
-                    'The method above is the recommended way to do it. If you need more control over the parameters or want to learn how it is implemented, open the details by clicking on the "Details" text.'
+                    'The method above is the recommended way to do it. If you need more control over the parameters or want to learn how it is implemented, open the details by clicking on the "Details" text.',
                 )
                 docs.write('<details>')
             }
@@ -522,7 +522,7 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
             if (tlobject.result.startsWith('Vector')) {
                 docs.write(
                     `<strong>for</strong> x <strong>in</strong> result:
-        print(x`
+        print(x`,
                 )
             } else {
                 docs.write('    console.log(result')
@@ -582,7 +582,7 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
             docs.writeText('This type has one constructor available.')
         } else {
             docs.writeText(
-                `This type has ${cs.length} constructors available.`
+                `This type has ${cs.length} constructors available.`,
             )
         }
 
@@ -606,7 +606,7 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
             docs.writeText('Only the following method returns this type.')
         } else {
             docs.writeText(
-                `The following ${functions.length} methods return this type as a result.`
+                `The following ${functions.length} methods return this type as a result.`,
             )
         }
 
@@ -627,13 +627,13 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
 
         if (!otherMethods.length) {
             docs.writeText(
-                'No methods accept this type as an input parameter.'
+                'No methods accept this type as an input parameter.',
             )
         } else if (otherMethods.length === 1) {
             docs.writeText('Only this method has a parameter with this type.')
         } else {
             docs.writeText(
-                `The following ${otherMethods.length} methods accept this type as an input parameter.`
+                `The following ${otherMethods.length} methods accept this type as an input parameter.`,
             )
         }
 
@@ -656,11 +656,11 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
             docs.writeText('No other types have a member of this type.')
         } else if (otherTypes.length === 1) {
             docs.writeText(
-                'You can find this type as a member of this other type.'
+                'You can find this type as a member of this other type.',
             )
         } else {
             docs.writeText(
-                `You can find this type as a member of any of the following ${otherTypes.length} types.`
+                `You can find this type as a member of any of the following ${otherTypes.length} types.`,
             )
         }
 
@@ -726,7 +726,7 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
             .map((x) =>
                 zs[x.className] && x.namespace ?
                     `"${x.namespace}.${x.className}"` :
-                    `"${x.className}"`
+                    `"${x.className}"`,
             )
             .join(', ')
     }
@@ -740,8 +740,8 @@ const writeHtmlPages = (tlobjects, methods, layer, inputRes) => {
                 (x) =>
                     `"${formatter(x).replace(
                         new RegExp(`\\${path.sep}`, 'g'),
-                        '/'
-                    )}"`
+                        '/',
+                    )}"`,
             )
             .join(', ')
     }
@@ -773,7 +773,7 @@ const copyResources = (resDir) => {
         for (const file of files) {
             fs.copyFileSync(
                 `${resDir}/${dirname}/${file}`,
-                `${dirname}/${file}`
+                `${dirname}/${file}`,
             )
         }
     }

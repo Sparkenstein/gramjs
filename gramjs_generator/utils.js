@@ -6,7 +6,7 @@ const variableSnakeToCamelCase = (str) => str.replace(
     /([-_][a-z])/g,
     (group) => group.toUpperCase()
         .replace('-', '')
-        .replace('_', '')
+        .replace('_', ''),
 )
 
 

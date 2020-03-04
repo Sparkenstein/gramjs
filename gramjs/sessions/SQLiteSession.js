@@ -49,7 +49,6 @@ class SQLiteSession extends MemorySession {
 
 
             if (res) {
-
                 this._dcId = res['dcId']
                 this._serverAddress = res['serverAddress']
                 this._port = res['port']
@@ -96,7 +95,6 @@ class SQLiteSession extends MemorySession {
             this._updateSessionTable()
             this.save()
         }
-
     }
 
     load() {

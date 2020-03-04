@@ -25,5 +25,5 @@ module.exports = {
     html: {
         parse: html.parse,
         unparse: html.unparse,
-    }
+    },
 }

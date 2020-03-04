@@ -46,14 +46,12 @@ const generateErrors = (errors, f) => {
 
             f.write(`this.message = format('${capture}', {${error.captureName}})`)
             f.write(' + RPCError._fmtRequest(args.request);\n')
-
         } else {
             f.write(`super('${capture}'`)
             f.write(' + RPCError._fmtRequest(args.request));\n')
 
             f.write(`this.message = '${capture}'`)
             f.write(' + RPCError._fmtRequest(args.request);\n')
-
         }
 
 

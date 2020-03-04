@@ -8,7 +8,6 @@ class AuthKey {
     }
 
     set key(value) {
-
         if (!value) {
             this._key = this.auxHash = this.keyId = null
             return
