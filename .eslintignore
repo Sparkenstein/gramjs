@@ -5,3 +5,5 @@ gramjs/tl/types
 gramjs/tl/AllTLObjects.js
 gramjs/errors/RPCErrorList.js
 example.js
+examples/
+browser/

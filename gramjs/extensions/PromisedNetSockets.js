@@ -15,7 +15,6 @@ class PromisedNetSockets {
             console.log('couldn\'t read')
             throw closeError
         }
-        const canWe = await this.canRead
 
         const toReturn = this.stream.slice(0, number)
         this.stream = this.stream.slice(number)

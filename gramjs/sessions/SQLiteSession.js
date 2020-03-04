@@ -212,6 +212,8 @@ class SQLiteSession extends MemorySession {
             return
         }
         for (const row of rows) {
+            // Integer method comes from better-sqlite3 package, can't change it
+            // eslint-disable-next-line new-cap
             row[1] = Database.Integer(row[1].toString())
             const stmt = this.db.prepare('insert or replace into entities values (?,?,?,?,?)')
             stmt.run(...row)

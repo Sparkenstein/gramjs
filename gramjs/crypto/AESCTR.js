@@ -1,11 +1,12 @@
 const aesjs = require('aes-js')
-const stackTrace = require('stack-trace')
 
 class AESModeCTR {
     constructor(key, iv) {
         if (!(key instanceof Buffer) || !(iv instanceof Buffer) || iv.length !== 16) {
             throw new Error('Key and iv need to be a buffer')
         }
+        // Can't fix library functions
+        // eslint-disable-next-line new-cap
         this.cipher = new aesjs.ModeOfOperation.ctr(Buffer.from(key), Buffer.from(iv))
     }
 
