@@ -52,15 +52,15 @@ class TelegramClient {
 
 
     constructor(session, apiId, apiHash, opts = TelegramClient.DEFAULT_OPTIONS) {
-        if (apiId === undefined || apiHash === undefined) {
+        if (!apiId || !apiHash) {
             throw Error('Your API ID or Hash are invalid. Please read "Requirements" on README.md')
         }
         const args = { ...TelegramClient.DEFAULT_OPTIONS, ...opts }
-        this.apiId = apiId
+        this.apiId = parseInt(apiId)
         this.apiHash = apiHash
         this._useIPV6 = args.useIPV6
         this._entityCache = new Set()
-        if (typeof args.baseLogger == 'string') {
+        if (typeof args.baseLogger === 'string') {
             this._log = new Logger()
         } else {
             this._log = args.baseLogger
@@ -84,8 +84,6 @@ class TelegramClient {
         this._phoneCodeHash = {}
         this.session = session
         // this._entityCache = EntityCache();
-        this.apiId = parseInt(apiId)
-        this.apiHash = apiHash
 
         this._requestRetries = args.requestRetries
         this._connectionRetries = args.connectionRetries
@@ -211,7 +209,7 @@ class TelegramClient {
         this.session.authKey = null
         await this.session.save()
         await this.disconnect()
-        return await this.connect()
+        return this.connect()
     }
 
     async _authKeyCallback(authKey) {
@@ -415,7 +413,7 @@ class TelegramClient {
                 throw new Error('Two-step verification is enabled for this account. ' +
                     'Please provide the \'password\' argument to \'start()\'.')
             }
-            if (typeof args.password == 'function') {
+            if (typeof args.password === 'function') {
                 for (let i = 0; i < args.maxAttempts; i++) {
                     try {
                         const pass = await args.password()
@@ -450,7 +448,7 @@ class TelegramClient {
     }) {
         let result
         if (args.phone && !args.code && !args.password) {
-            return await this.sendCodeRequest(args.phone)
+            return this.sendCodeRequest(args.phone)
         } else if (args.code) {
             const [phone, phoneCodeHash] =
                 this._parsePhoneAndHash(args.phone, args.phoneCodeHash)
@@ -498,7 +496,7 @@ class TelegramClient {
 
     // endregion
     async isUserAuthorized() {
-        if (this._authorized === undefined || this._authorized === null) {
+        if (!this._authorized) {
             try {
                 await this.invoke(new functions.updates.GetStateRequest())
                 this._authorized = true
@@ -536,7 +534,7 @@ class TelegramClient {
                 }))
             } catch (e) {
                 if (e instanceof errors.AuthRestartError) {
-                    return await this.sendCodeRequest(phone, forceSMS)
+                    return this.sendCodeRequest(phone, forceSMS)
                 }
                 throw e
             }
@@ -651,7 +649,7 @@ class TelegramClient {
                 throw e
             }
         } else if (['me', 'this'].includes(string.toLowerCase())) {
-            return await this.getMe()
+            return this.getMe()
         } else {
             const { username, isJoinChat } = utils.parseUsername(string)
             if (isJoinChat) {
@@ -1036,14 +1034,14 @@ class TelegramClient {
             }
         }
         if (media instanceof types.MessageMediaPhoto || media instanceof types.Photo) {
-            return await this._downloadPhoto(media, file, date, args.thumb, args.progressCallback)
+            return this._downloadPhoto(media, file, date, args.thumb, args.progressCallback)
         } else if (media instanceof types.MessageMediaDocument || media instanceof types.Document) {
-            return await this._downloadDocument(media, file, date, args.thumb, args.progressCallback, media.dcId)
+            return this._downloadDocument(media, file, date, args.thumb, args.progressCallback, media.dcId)
         } else if (media instanceof types.MessageMediaContact && args.thumb == null) {
             return this._downloadContact(media, file)
         } else if ((media instanceof types.WebDocument || media instanceof types.WebDocumentNoProxy) &&
                     args.thumb == null) {
-            return await this._downloadWebDocument(media, file, args.progressCallback)
+            return this._downloadWebDocument(media, file, args.progressCallback)
         }
     }
 
@@ -1064,7 +1062,7 @@ class TelegramClient {
                     return null
                 }
 
-                return await this._downloadPhoto(
+                return this._downloadPhoto(
                     entity.chatPhoto, file, null, thumb, null,
                 )
             }
@@ -1088,7 +1086,7 @@ class TelegramClient {
             // as input location, because then this method would be able
             // to "download the profile photo of a message", i.e. its
             // media which should be done with `download_media` instead.
-            return null
+            return
         }
         file = file ? file : Buffer
         try {
@@ -1103,7 +1101,7 @@ class TelegramClient {
                     const full = await this.invoke(new functions.channels.GetFullChannelRequest({
                         channel: ie,
                     }))
-                    return await this._downloadPhoto(full.fullChat.chatPhoto, file, null, null, thumb)
+                    return this._downloadPhoto(full.fullChat.chatPhoto, file, null, null, thumb)
                 } else {
                     return null
                 }
@@ -1114,7 +1112,7 @@ class TelegramClient {
     }
 
     _getThumb(thumbs, thumb) {
-        if (thumb === null || thumb === undefined) {
+        if (!thumb) {
             return thumbs[thumbs.length - 1]
         } else if (typeof thumb === 'number') {
             return thumbs[thumb]
@@ -1122,8 +1120,6 @@ class TelegramClient {
             thumb instanceof types.PhotoCachedSize ||
             thumb instanceof types.PhotoStrippedSize) {
             return thumb
-        } else {
-            return null
         }
     }
 
@@ -1182,14 +1178,13 @@ class TelegramClient {
         let size
         file = file ? file : Buffer
 
-        if (thumb === null || thumb === undefined) {
-            size = null
-        } else {
+        if (thumb) {
             size = this._getThumb(document.thumbs, thumb)
             if (size instanceof types.PhotoCachedSize || size instanceof types.PhotoStrippedSize) {
                 return this._downloadCachedPhotoSize(size, file)
             }
         }
+
         const result = await this.downloadFile(
             new types.InputDocumentFileLocation({
                 id: document.id,
